@@ -24,19 +24,17 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
-        if not kwargs:
-            from models import storage
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-            for key, value in kwargs.items:
-                if key == '__class__':
-                    continue
-                setattr(self, key, value)
-                if type(self.created_at) is str:
-                    self.create_at = datetime.strptime(self.created_at, t_fmt)
-                if type(self.updated_at) is str:
-                    self.updated_at = datetime.strptime(self.updated_at, t_fmt)
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+        for key, value in kwargs.items:
+            if key == '__class__':
+                continue
+            setattr(self, key, value)
+            if type(self.created_at) is str:
+                self.create_at = datetime.strptime(self.created_at, t_fmt)
+            if type(self.updated_at) is str:
+                self.updated_at = datetime.strptime(self.updated_at, t_fmt)
 
     def __str__(self):
         """Returns a string representation of the instance"""
