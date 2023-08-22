@@ -14,7 +14,7 @@ class FileStorage:
             return FileStorage.__objects
         else:
             cls_objs = {}
-            for key, value in FileStrorage.__objects.items():
+            for key, value in FileStorage.__objects.items():
                 if isinstance(value, cls):
                     cls_objs[key] = value
             return cls_objs
@@ -57,21 +57,9 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-<<<<<<< HEAD
         """delete an object from __objects"""
         if obj is not None:
             del self.__objects[obj.__class__.__name__ + '.' + obj.id]
             self.save()
-=======
-        """Delete an object from __objects"""
-        if obj is not None:
-            key_to_delete = None
-            for key, value in FileStorage.__objects.items():
-                if value is obj:
-                    key_to_delete = key
-                    break
-            if key_to_delete is not None:
-                del FileStorage.__objects[key_to_delete]
         else:
             return
->>>>>>> 3c99f3379e2d1e98209c50413754557dbc270320
