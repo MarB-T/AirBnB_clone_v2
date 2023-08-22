@@ -27,7 +27,7 @@ class BaseModel:
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
-        for key, value in kwargs.items:
+        for key, value in kwargs.items():
             if key == '__class__':
                 continue
             setattr(self, key, value)
@@ -57,6 +57,7 @@ class BaseModel:
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
         dictionary('_sa_instance_state', None)
+        dictionary.pop()
         return dictionary
 
     def delete(self):
