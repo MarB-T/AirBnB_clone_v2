@@ -20,6 +20,8 @@ class Place(BaseModel):
         price_by_unit = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
+        reviews = relationship(
+                'Review', cascade="all, delete-orphan", backre='place')
 
     else:
         city_id = ""
