@@ -22,7 +22,20 @@ class DBStorage:
 
     def all(self, cls=None):
         """returns a dict of objects present"""
+        all_objects = {}
 
+        if cls:
+            query_results = self.__session.query(cls).all()
+            for obj in query_results:
+                key = "{}.{}".format(obj.__class__.__name__, obj.id)
+                all_objects[key] = obj
+        else:
+            for cls in Base.__subclasses__():
+                query_results = self.__session.query(cls).all()
+                for obj in query_results:
+                    key = "{}.{}".format(obj.__class__.__name__, obj.id)
+                    all_objects[key] = obj
+        return all_objects
 
     def new(self, obj):
         """add the object to the current database session"""
