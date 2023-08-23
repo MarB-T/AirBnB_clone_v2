@@ -3,6 +3,7 @@
 from models.base_model import BaseModel, Base
 from os import getenv
 from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 import models
 
 
@@ -14,6 +15,8 @@ class User(BaseModel, Base):
         _password = Column('password', String(128), nullable=False)
         first_name = Column(String(128), nullable=True)
         last_name = Column(String(128), nullable=True)
+        places = relationship(
+                'Places', cascade='all, delete-orphan', backref='user')
     else:
         email = ""
         _password = ""
