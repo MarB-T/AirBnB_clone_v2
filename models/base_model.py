@@ -32,7 +32,7 @@ class BaseModel:
                 continue
             setattr(self, key, value)
             if type(self.created_at) is str:
-                self.create_at = datetime.strptime(self.created_at, t_fmt)
+                self.created_at = datetime.strptime(self.created_at, t_fmt)
             if type(self.updated_at) is str:
                 self.updated_at = datetime.strptime(self.updated_at, t_fmt)
 
