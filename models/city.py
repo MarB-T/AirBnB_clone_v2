@@ -21,4 +21,4 @@ class City(BaseModel, Base):
 
     def __init__(self, *args, **kwargs):
         """initializes the class City"""
-        Super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)

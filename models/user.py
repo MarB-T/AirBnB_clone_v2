@@ -5,6 +5,7 @@ from os import getenv
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 import models
+import hashlib
 
 
 class User(BaseModel, Base):
@@ -16,7 +17,7 @@ class User(BaseModel, Base):
         first_name = Column(String(128), nullable=True)
         last_name = Column(String(128), nullable=True)
         places = relationship(
-                'Places', cascade='all, delete-orphan', backref='user')
+                'Place', cascade='all, delete-orphan', backref='user')
         reviews = relationship(
                 'Review', cascade='all, delete-orphan', backref='user')
     else:

@@ -11,7 +11,7 @@ import models
 class State(BaseModel, Base):
     """ State class """
     if getenv('HBNB_TYPE_STORAGE') == 'db':
-        __tablename__ == 'states'
+        __tablename__ = 'states'
         name = Column(String(128), nullable=False)
         cities = relationship("City", cascade="all, delete",
                 backref="state")
@@ -28,7 +28,7 @@ class State(BaseModel, Base):
             """getter method that returns a list of city instances"""
             city_instance = models.storage.all("City").values()
             city_list = []
-            for city in city_list:
+            for city in city_instance:
                 if city.state_id == self.id:
                     city_list.append(city)
             return city_list
