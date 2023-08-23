@@ -5,7 +5,10 @@ from os import getenv
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
 from models.place import place_amenity
+<<<<<<< HEAD
 
+=======
+>>>>>>> dc9d1beef273acaf4f63833c60c6f23ee3e270c0
 
 
 class Amenity(BaseModel, Base):
@@ -14,4 +17,4 @@ class Amenity(BaseModel, Base):
         __tablename__ = 'amenities'
         name = Column(String(128), nullable=False)
         place_amenities = relationship(
-                'place' secondary=place_amenity, back_populates="amenities")
+                'place', secondary=place_amenity, back_populates="amenities")
