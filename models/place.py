@@ -8,11 +8,11 @@ import models
 import os
 
 
-place_amenity = Table('place_amenity', Base.metadata,
+'''place_amenity = Table('place_amenity', Base.metadata,
                       Column('place_id', String(60),
                              ForeignKey('places.id'), nullable=False),
                       Column('amenity_id', String(60),
-                             ForeignKey('amenities.id'), nullable=False))
+                             ForeignKey('amenities.id'), nullable=False))'''
 
 class Place(BaseModel):
     """ A place to stay """
@@ -30,8 +30,8 @@ class Place(BaseModel):
         longitude = Column(Float, nullable=True)
         reviews = relationship(
                 'Review', cascade="all, delete-orphan", backref='place')
-        amenities = relationship('Amenity', secondary=place_amenity,
-                back_populates="place_amenities", viewonly=False)
+        '''amenities = relationship('Amenity', secondary=place_amenity,
+                back_populates="place_amenities", viewonly=False)'''
 
     else:
         city_id = ""
