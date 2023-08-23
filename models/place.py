@@ -2,9 +2,17 @@
 """ Place Module for HBNB project """
 from models.base_model import BaseModel, Base
 from os import getenv
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
 import models
+import os
 
+
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'), nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'), nullable=False))
 
 class Place(BaseModel):
     """ A place to stay """
@@ -22,6 +30,8 @@ class Place(BaseModel):
         longitude = Column(Float, nullable=True)
         reviews = relationship(
                 'Review', cascade="all, delete-orphan", backref='place')
+        amenities = relationship('Amenity', secondary=place_amenity,
+                back_populates="place_amenities", viewonly=False)
 
     else:
         city_id = ""
@@ -35,6 +45,37 @@ class Place(BaseModel):
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
+
+
+    @property
+    def reviews(self):
+        """Review instances """
+        review_inst = models.storage.all('Review').values()
+        all_revs = []
+        for inst in review_inst:
+            if inst.place_id == self.id:
+                all_revs.append(inst)
+        return all_revs
+
+
+    if os.getenv('HBNB_MYSQL_DB') == 'FileStorage':
+        @property
+        def amenities(self):
+            """ Returns a list of amenity instances """
+            for amenity in self.amenity_ids:
+                amenity_inst = models.storage.all('Review').values()
+                all_amenities = []
+                for inst in amenity_inst:
+                    all_amenities.append[inst]
+            return all_amenities
+
+        @amenities.setter
+        def amenities(self, obj):
+            """ set  """
+            if type(obj) is Amenity:
+                self.amenity_ids.append(obj.id)
+
+
 
     def __init__(self, *args, **kwargs):
         """Initialize the place class """
