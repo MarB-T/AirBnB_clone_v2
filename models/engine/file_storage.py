@@ -20,7 +20,7 @@ class FileStorage:
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
-        if not cls:
+        if cls is None:
             return self.__objects
         elif type(cls) == str:
             return {k: v for k, v in self.__objects.items()
@@ -59,3 +59,7 @@ class FileStorage:
         if obj is not None:
             del self.__objects[obj.__class__.__name__ + '.' + obj.id]
             self.save()
+
+    def close(self):
+        """Deserialize JSON file to objects"""
+        self.reload()

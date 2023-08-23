@@ -5,6 +5,10 @@ from models.base_model import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
+classes = {"User": User, "State": State, "City": City,
+           "Amenity": Amenity, "Place": Place, "Review": Review}
+
+
 class DBStorage:
     """A class for db storage"""
     __engine = None
@@ -24,20 +28,20 @@ class DBStorage:
 
     def all(self, cls=None):
         """returns a dict of objects present"""
-        all_objects = {}
-
-        if cls:
-            query_results = self.__session.query(cls).all()
-            for obj in query_results:
-                key = "{}.{}".format(obj.__class__.__name__, obj.id)
-                all_objects[key] = obj
+        new_dict = {}
+        if cls is None:
+            for c in classes.values():
+                objs = self.__session.query(c).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[key] = obj
         else:
-            for cls in Base.__subclasses__():
-                query_results = self.__session.query(cls).all()
-                for obj in query_results:
-                    key = "{}.{}".format(obj.__class__.__name__, obj.id)
-                    all_objects[key] = obj
-        return all_objects
+            objs = self.__session.query(cls).all()
+            for obj in objs:
+                key = obj.__class__.__name__ + '.' + obj.id
+                new_dict[key] = obj
+        return new_dict
+
 
     def new(self, obj):
         """add the object to the current database session"""
