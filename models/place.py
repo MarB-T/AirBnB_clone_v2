@@ -58,7 +58,7 @@ class Place(BaseModel):
         return all_revs
 
 
-    if os.getenv('HBNB_MYSQL_DB') == 'FileStorage':
+    if getenv('HBNB_MYSQL_DB') == 'FileStorage':
         @property
         def amenities(self):
             """ Returns a list of amenity instances """
