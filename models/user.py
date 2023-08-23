@@ -32,9 +32,10 @@ class User(BaseModel, Base):
 
     @property
     def password(self):
+        """getter method for passwd"""
         return self._password
 
     @password.setter
     def password(self, pwd):
-        """hashing password values"""
+        """hashes the  passwd values"""
         self._password = pwd
