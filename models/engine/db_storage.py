@@ -12,11 +12,13 @@ class DBStorage:
 
     def __init__(self):
         """iinitializes the class dbstorage"""
-        eng = 'mysql+mysqldb://{}:{}@{}/{}'\
-                .format(getenv('HBNB_MYSQL_USER'), getenv('HBNB_MYSQL_PWD'),
-                getenv('HBNB_MYSQL_HOST', 'localhost'),
-                getenv('HBNB_MYSQL_DB'))
-        self.__engine = create_engine(eng, pool_pre_ping=True)
+        user = getenv('HBNB_MYSQL_USER')
+        passwd = getenv('HBNB_MYSQL_PWD')
+        host = getenv('HBNB_MYSQL_HOST')
+        database = getenv('HBNB_MYSQL_DB')
+        self.__engine =create_engine('mysql+mysqldb://{}:{}@{}/{}'
+                .format(user, passwd, host, database))
+
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
@@ -54,8 +56,8 @@ class DBStorage:
 
     def reload(self):
         """reloads objects in dbase"""
-        Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
+        Base.metadata.create_all(self.__engine)
         self.__session = scoped_session(session_factory)
 

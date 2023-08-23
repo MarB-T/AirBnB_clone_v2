@@ -26,7 +26,7 @@ class BaseModel:
         """Instatntiates a new model"""
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        self.updated_at = self.created_at
         for key, value in kwargs.items():
             if key == '__class__':
                 continue
@@ -38,27 +38,33 @@ class BaseModel:
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
-
+        return "[{:s}] ({:s}) {}".format(self.__class__.__name__, self.id,
+                                         self.__dict__)
     def save(self):
         """Updates updated_at with current time when instance is changed"""
-        from models import storage
         self.updated_at = datetime.now()
-        storage.new(self)
-        storage.save()
+        models.storage.new(self)
+        models.storage.save()
 
-    def to_dict(self):
+    def to_dict(self, save_to_disk=False):
         """Convert instance into dict format"""
-        dictionary = {}
-        dictionary.update(self.__dict__)
-        dictionary.update({'__class__':
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
-        dictionary['created_at'] = self.created_at.isoformat()
-        dictionary['updated_at'] = self.updated_at.isoformat()
-        dictionary.pop('_sa_instance_state', None)
-        return dictionary
-
+        n_dict = self.__dict__.copy()
+        if "created_at" in n_dict:
+            n_dict["created_at"] = n_dict["created_at"].isoformat()
+        if "updated_at" in n_dict:
+            n_dict["updated_at"] = n_dict["updated_at"].isoformat()
+        if '_password' in n_dict:
+            n_dict['password'] = n_dict['_password']
+            n_dict.pop('_password', None)
+        if 'amenities' in n_dict:
+            n_dict.pop('amenities', None)
+        if 'reviews' in n_dict:
+            n_dict.pop('reviews', None)
+        n_dict["__class__"] = self.__class__.__name__
+        n_dict.pop('_sa_instance_state', None)
+        if not save_to_disk:
+            n_dict.pop('password', None)
+        return n_dict
     def delete(self):
         """deletes the current instance from the storage"""
         models.storage.delete(self)
