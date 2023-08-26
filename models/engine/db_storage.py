@@ -11,6 +11,9 @@ from models.state import State
 from models.review import Review
 from models.user import User
 
+if getenv('HBNB_TYPE_STORAGE') == 'db':
+    from models.place import place_amenity
+
 classes = {"User": User, "State": State, "City": City,
            "Amenity": Amenity, "Place": Place, "Review": Review}
 
@@ -51,7 +54,14 @@ class DBStorage:
 
     def new(self, obj):
         """add the object to the current database session"""
-        self.__session.add(obj)
+        if obj is not None:
+            try:
+                self.__session.add(obj)
+                self.__session.flush()
+                self.__session.refresh(obj)
+            except Exception as ex:
+                self.__session.rollback()
+                raise ex
 
     def save(self):
         """commit all changes of the current database session"""
@@ -59,19 +69,17 @@ class DBStorage:
 
     def delete(self, obj=None):
         """delete from the current database session"""
-        if not self.__session:
-            self.reload()
-        if obj:
-            self.__session.delete(obj)
-
+        if obj is not None:
+            self.__session.query(type(obj)).filter(
+                type(obj).id == obj.id).delete()
     def reload(self):
         """reloads objects in dbase"""
+        Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
-        Base.metadata.create_all(self.__engine)
-        self.__session = scoped_session(session_factory)
+        self.__session = scoped_session(session_factory)()
 
     def close(self):
         """closes the working session"""
-        self.__session.close()
+        self.__session.remove()
 
