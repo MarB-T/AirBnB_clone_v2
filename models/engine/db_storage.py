@@ -26,11 +26,16 @@ class DBStorage:
     def __init__(self):
         """iinitializes the class dbstorage"""
         user = getenv('HBNB_MYSQL_USER')
-        passwd = getenv('HBNB_MYSQL_PWD')
+        pwd = getenv('HBNB_MYSQL_PWD')
         host = getenv('HBNB_MYSQL_HOST')
-        database = getenv('HBNB_MYSQL_DB')
-        self.__engine =create_engine('mysql+mysqldb://{}:{}@{}/{}'
-                .format(user, passwd, host, database), pool_pre_ping=True)
+        dbase = getenv('HBNB_MYSQL_DB')
+        self.__engine = create_engine(
+            'mysql+mysqldb://{}:{}@{}/{}'.format(
+                                           user,
+                                           pwd,
+                                           host,
+                                           dbase
+                                       ), pool_pre_ping=True)
 
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
@@ -50,7 +55,6 @@ class DBStorage:
                 key = obj.__class__.__name__ + '.' + obj.id
                 new_dict[key] = obj
         return new_dict
-
 
     def new(self, obj):
         """add the object to the current database session"""
@@ -72,6 +76,7 @@ class DBStorage:
         if obj is not None:
             self.__session.query(type(obj)).filter(
                 type(obj).id == obj.id).delete()
+
     def reload(self):
         """reloads objects in dbase"""
         Base.metadata.create_all(self.__engine)
@@ -82,4 +87,3 @@ class DBStorage:
     def close(self):
         """closes the working session"""
         self.__session.remove()
-

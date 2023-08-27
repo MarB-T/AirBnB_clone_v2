@@ -5,9 +5,7 @@ from datetime import datetime
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from os import getenv
-import models
 
-t_fmt = "%Y-%m-%dT%H:%M:%S.%f"
 
 Base = declarative_base()
 
@@ -20,38 +18,23 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = self.created_at
-        if len(kwargs) == 0:
+        if not kwargs:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
         else:
-            if kwargs.get("created_at"):
-                kwargs["created_at"] = datetime.strptime(
-                    kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
-            else:
-                self.created_at = datetime.now()
-            if kwargs.get("created_at"):
-                kwargs["updated_at"] = datetime.strptime(
-                    kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
-            else:
-                self.updated_at = datetime.now()
-            for key, val in kwargs.items():
-                if "__class__" not in key:
-                    setattr(self, key, val)
-            if not self.id:
-                self.id = str(uuid.uuid4())
-
-        '''for key, value in kwargs.items():
-            if key == '__class__':
-                continue
-            setattr(self, key, value)
-            if type(self.created_at) is str:
-                self.created_at = datetime.strptime(self.created_at, t_fmt)
-            if type(self.updated_at) is str:
-                self.updated_at = datetime.strptime(self.updated_at, t_fmt)'''
+            for k in kwargs:
+                if k in ['created_at', 'updated_at']:
+                    setattr(self, k, datetime.fromisoformat(kwargs[k]))
+                elif k != '__class__':
+                    setattr(self, k, kwargs[k])
+            if getenv('HBNB_TYPE_STORAGE') == 'db':
+                if not hasattr(kwargs, 'id'):
+                    setattr(self, 'id', str(uuid.uuid4()))
+                if not hasattr(kwargs, 'created_at'):
+                    setattr(self, 'created_at', datetime.now())
+                if not hasattr(kwargs, 'updated_at'):
+                    setattr(self, 'updated_at', datetime.now())
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -60,30 +43,24 @@ class BaseModel:
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
+        from models import storage
         self.updated_at = datetime.now()
-        models.storage.new(self)
-        models.storage.save()
+        storage.new(self)
+        storage.save()
 
-    def to_dict(self, save_to_disk=False):
+    def to_dict(self):
         """Convert instance into dict format"""
-        n_dict = self.__dict__.copy()
-        if "created_at" in n_dict:
-            n_dict["created_at"] = n_dict["created_at"].isoformat()
-        if "updated_at" in n_dict:
-            n_dict["updated_at"] = n_dict["updated_at"].isoformat()
-        if '_password' in n_dict:
-            n_dict['password'] = n_dict['_password']
-            n_dict.pop('_password', None)
-        if 'amenities' in n_dict:
-            n_dict.pop('amenities', None)
-        if 'reviews' in n_dict:
-            n_dict.pop('reviews', None)
-        n_dict["__class__"] = self.__class__.__name__
-        n_dict.pop('_sa_instance_state', None)
-        if not save_to_disk:
-            n_dict.pop('password', None)
-        return n_dict
+        dct = self.__dict__.copy()
+        dct['__class__'] = self.__class__.__name__
+        for k in dct:
+            if type(dct[k]) is datetime:
+                dct[k] = dct[k].isoformat()
+        if '_sa_instance_state' in dct.keys():
+            del(dct['_sa_instance_state'])
+        return dct
+
 
     def delete(self):
         """deletes the current instance from the storage"""
-        models.storage.delete(self)
+        from models import storage
+        storage.delete(self)

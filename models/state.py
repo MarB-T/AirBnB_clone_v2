@@ -33,7 +33,7 @@ class State(BaseModel, Base):
 
     '''def __init__(self, *args, **kwargs):
         """initializes the class State"""
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)'''
 
     if getenv('HBNB_TYPE_STORAGE') != 'db':
         @property
@@ -44,4 +44,4 @@ class State(BaseModel, Base):
             for city in city_instance:
                 if city.state_id == self.id:
                     city_list.append(city)
-            return city_list'''
+            return city_list
