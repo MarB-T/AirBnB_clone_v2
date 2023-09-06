@@ -18,6 +18,7 @@ if getenv('HBNB_TYPE_STORAGE') == 'db':
                                  nullable=False)
                           )
 
+
 class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = 'places'
@@ -32,10 +33,10 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        reviews = relationship(
-                "Review", cascade="all, delete, delete-orphan", backref="places")
+        reviews = relationship("Review", cascade="all, delete, delete-orphan",
+                               backref="places")
         amenities = relationship("Amenity", secondary=place_amenity,
-                backref="place_amenities", viewonly=False)
+                                 backref="place_amenities", viewonly=False)
 
     else:
         city_id = ""
@@ -50,7 +51,6 @@ class Place(BaseModel, Base):
         longitude = 0.0
         amenity_ids = []
 
-
         @property
         def reviews(self):
             """Review instances """
@@ -61,7 +61,6 @@ class Place(BaseModel, Base):
                 if rev.place_id == self.id:
                     lst.append(rev)
             return lst
-
 
         @property
         def amenities(self):
