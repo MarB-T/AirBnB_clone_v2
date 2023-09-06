@@ -5,7 +5,7 @@ from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-import models
+from models import storage
 
 
 class State(BaseModel, Base):
@@ -25,23 +25,9 @@ class State(BaseModel, Base):
                 State.id
                 FileStorage relationship between State and City
             '''
-            list_cities = []
-            for city in models.storage.all("City").values():
+            related_cities = []
+            cities = storage.all(City)
+            for city in cities.values():
                 if city.state_id == self.id:
-                    list_cities.append(city)
-            return list_cities
-
-    '''def __init__(self, *args, **kwargs):
-        """initializes the class State"""
-        super().__init__(*args, **kwargs)'''
-
-    if getenv('HBNB_TYPE_STORAGE') != 'db':
-        @property
-        def cities(self):
-            """getter method that returns a list of city instances"""
-            city_instance = models.storage.all("City").values()
-            city_list = []
-            for city in city_instance:
-                if city.state_id == self.id:
-                    city_list.append(city)
-            return city_list
+                    related_cities.append(city)
+            return related_cities

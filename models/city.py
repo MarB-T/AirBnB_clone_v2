@@ -16,9 +16,6 @@ class City(BaseModel, Base):
         places = relationship(
                 'Place', cascade='all, delete-orphan', backref='cities')
     else:
-        name = ""
-        state_id = ""
+        name = ''
+        state_id = ''
 
-    '''def __init__(self, *args, **kwargs):
-        """initializes the class City"""
-        super().__init__(*args, **kwargs)'''
