@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
-import models
 from models.base_model import BaseModel, Base
 from os import getenv
 import sqlalchemy
@@ -19,7 +18,7 @@ if getenv('HBNB_TYPE_STORAGE') == 'db':
                                  nullable=False)
                           )
 
-class Place(BaseModel):
+class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = 'places'
     if getenv('HBNB_TYPE_STORAGE') == 'db':
@@ -52,36 +51,33 @@ class Place(BaseModel):
         amenity_ids = []
 
 
-    @property
-    def reviews(self):
-        """Review instances """
-        review_inst = models.storage.all('Review').values()
-        all_revs = []
-        for inst in review_inst:
-            if inst.place_id == self.id:
-                all_revs.append(inst)
-        return all_revs
+        @property
+        def reviews(self):
+            """Review instances """
+            from models import storage
+            all_revs = storage.all(Review)
+            lst = []
+            for rev in all_revs.values():
+                if rev.place_id == self.id:
+                    lst.append(rev)
+            return lst
 
 
-    if getenv('HBNB_MYSQL_DB') == 'FileStorage':
         @property
         def amenities(self):
             """ Returns a list of amenity instances """
-            for amenity in self.amenity_ids:
-                amenity_inst = models.storage.all('Review').values()
-                all_amenities = []
-                for inst in amenity_inst:
-                    all_amenities.append[inst]
-            return all_amenities
+            from models import storage
+            all_amens = storage.all(Amenity)
+            lst = []
+            for amen in all_amens.values():
+                if amen.id in self.amenity_ids:
+                    lst.append(amen)
+            return lst
 
         @amenities.setter
         def amenities(self, obj):
             """ set  """
-            if type(obj) is Amenity:
-                self.amenity_ids.append(obj.id)
-
-
-
-    def __init__(self, *args, **kwargs):
-        """Initialize the place class """
-        super().__init__(*args, **kwargs)
+            if obj is not None:
+                if isinstance(obj, Amenity):
+                    if obj.id not in self.amenity_ids:
+                        self.amenity_ids.append(obj.id)
