@@ -7,7 +7,6 @@ from datetime import datetime
 import os
 
 
-@task
 def do_pack():
     """ generate .tgz achive from web_static """
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
