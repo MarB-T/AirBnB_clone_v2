@@ -11,22 +11,26 @@ env.hosts = ['52.87.154.89', '54.174.246.6']
 
 
 def do_deploy(archive_path):
-    if not archive_path:
+    """function to deploy the code"""
+    fil = os.path.basename(archive_path)
+    folder = fil.replace(".tgz", "")
+    path = "/data/web_static/releases/{}/".format(folder)
+    yes = False
+    if os.path.exists(archive_path):
+        try:
+            put(archive_path, '/tmp/')
+            run("mkdir -p {}".format(path))
+            run("tar -xzf /tmp/{} -C {}".format(fil, path))
+            run("rm -rf /tmp/{}".format(fil))
+            run("mv {}web_static/* {}".format(path, path))
+            run("rm -rf {}web_static".format(path))
+            run("rm -rf /data/web_static/current")
+            run("ln -sf {} /data/web_static/current".format(path))
+            print('Ran SUccesfully')
+            yes = True
+        except Exception as e:
+            print(e)
+            yes = False
+    else:
         return (False)
-    name = archive_path.split('/')[1]
-    try:
-        put(archive_path, '/tmp/')
-        run("mkdir -p /data/web_static/releases/{}".format(name))
-        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}"
-            .format(name, name))
-        run("rm /tmp/{}".format(name))
-        run("mv /data/web_static/releases/{}/web_static/*\
-        /data/web_static/releases/{}".format(name, name))
-        run("rm -rf /data/web_static/releases/{}/web_static".format(name))
-        run("rm -rf /data/web_static/current")
-        run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
-            .format(name))
-        print("New version deployed")
-        return (True)
-    except BaseException:
-        return (False)
+    return (yes)
