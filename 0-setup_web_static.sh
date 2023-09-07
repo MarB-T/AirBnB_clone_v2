@@ -15,12 +15,12 @@ sudo mkdir -p /data/web_static/shared/
 echo '<h1>"Fake HTML file"</h1>' | sudo tee /data/web_static/releases/test/index.html > /dev/null
 
 # Create a symlink
+if [ -d '/data/web_static?current' ]; then
+	sudo rm -rf /data/web_static/current;
+fi
 source_dir="/data/web_static/releases/test/"
 target_link="/data/web_static/current"
 
-if [ -L "$target_link" ]; then
-    rm -f "$target_link"
-fi
 
 ln -s "$source_dir" "$target_link"
 
