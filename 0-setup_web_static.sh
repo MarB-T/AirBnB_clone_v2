@@ -5,7 +5,7 @@ sudo mkdir -p /data/web_static/releases/test/
 sudo mkdir -p /data/web_static/shared/
 
 # Create a fake HTML file
-sudo echo '<h1>"Fake HTML file"</h1>' > /data/web_static/releases/test/index.html
+echo '<h1>"Fake HTML file"</h1>' | sudo tee /data/web_static/releases/test/index.html > /dev/null
 
 # Create a symlink
 source_dir="/data/web_static/releases/test/"
