@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# Installing nginx
+sudo apt-get update
+sudo apt-get -y install nginx
+echo 'Hello World!' | sudo tee /var/www/html/index/html
+sudo service nginx start
+
 # Create the directories
 sudo mkdir -p /data/web_static/releases/test/
 sudo mkdir -p /data/web_static/shared/
