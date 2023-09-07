@@ -29,12 +29,12 @@ sudo chown -R ubuntu:ubuntu /data/
 
 # Update nginx configuration
 update_nginx_config() {
-    nginx_config="/etc/nginx/sites-available/hbnb_static"
+    nginx_config="/etc/nginx/sites-available/default"
 
     # Remove existing configuration for the same server block if it exists
     sudo sed -i '/server_name blackpivot.tech/,/}/d' "$nginx_config"
 
-    echo "Creating new configuration..."
+    echo "Updating new configuration..."
     cat <<EOF | sudo tee "$nginx_config"
     server {
         listen 80;
