@@ -12,7 +12,7 @@ def do_pack():
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     if not (os.path.isdir("versions")):
         local("mkdir versions")
-    archive_path = "versions/web_static_{}".format(timestamp)
+    archive_path = "versions/web_static_{}.tgz".format(timestamp)
     result = local("tar -czvf {} web_static".format(archive_path))
 
     if (result.failed):
