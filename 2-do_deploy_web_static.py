@@ -10,18 +10,6 @@ env.user = "ubuntu"
 env.hosts = ['52.87.154.89', '54.174.246.6']
 
 
-def do_pack():
-    '''Packes web_static in tgz format'''
-    n = datetime.now()
-    name = "web_static_{}{}{}{}{}{}.tgz".format(n.year, n.month,
-                                                n.day, n.hour,
-                                                n.minute, n.second)
-    local('mkdir -p versions')
-    local("tar -cvzf versions/{} web_static".format(name))
-    size = os.stat("versions/{}".format(name)).st_size
-    print("web_static packed: versions/{} -> {}".format(name, size))
-
-
 def do_deploy(archive_path):
     if not archive_path:
         return (False)
