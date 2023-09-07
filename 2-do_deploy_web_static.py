@@ -24,7 +24,7 @@ def do_pack():
 
 def do_deploy(archive_path):
     if not archive_path:
-        return(False)
+        return (False)
     name = archive_path.split('/')[1]
     try:
         put(archive_path, '/tmp/')
@@ -39,6 +39,6 @@ def do_deploy(archive_path):
         run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
             .format(name))
         print("New version deployed")
-        return(True)
+        return (True)
     except BaseException:
-        return(False)
+        return (False)
