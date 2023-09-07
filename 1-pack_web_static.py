@@ -7,6 +7,7 @@ from datetime import datetime
 import os
 
 
+@task
 def do_pack():
     """ generate .tgz achive from web_static """
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -15,7 +16,7 @@ def do_pack():
     archive_path = "versions/web_static_{}".format(timestamp)
     result = local("tar -czvf {} web_static".format(archive_path))
 
-    if result.succeeded:
-        return (archive_path)
-    else:
+    if (result.failed):
         return (None)
+    else:
+        return (archive_path)
