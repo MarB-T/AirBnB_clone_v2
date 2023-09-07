@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Script to configure web server static files
 
 # Installing nginx
 sudo apt-get update
