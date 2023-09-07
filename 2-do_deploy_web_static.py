@@ -10,27 +10,35 @@ env.user = "ubuntu"
 env.hosts = ['52.87.154.89', '54.174.246.6']
 
 
+def do_pack():
+    '''Packes web_static in tgz format'''
+    n = datetime.now()
+    name = "web_static_{}{}{}{}{}{}.tgz".format(n.year, n.month,
+                                                n.day, n.hour,
+                                                n.minute, n.second)
+    local('mkdir -p versions')
+    local("tar -cvzf versions/{} web_static".format(name))
+    size = os.stat("versions/{}".format(name)).st_size
+    print("web_static packed: versions/{} -> {}".format(name, size))
+
+
 def do_deploy(archive_path):
-    """ deploy static files to the web server """
-    file = os.path.basename(archive_path)
-    folder = file.replace(".tgz", "")
-    path = "/data/web_static/releases/{}/".format(folder)
-    yes = False
-    if os.path.exists(archive_path):
-        try:
-            put(archive_path, '/tmp/')
-            run("mkdir -p {}".format(path))
-            run("tar -xzf /tmp/{} -C {}".format(file, path))
-            run("rm -rf /tmp/{}".format(file))
-            run("mv {}web_static/* {}".format(path, path))
-            run("rm -rf {}web_static".format(path))
-            run("rm -rf /data/web_static/current")
-            run("ln -sf {} /data/web_static/current".format(path))
-            print('Ran SUccesfully')
-            yes = True
-        except Exception as e:
-            print(e)
-            yes = False
-    else:
-        return (False)
-    return (yes)
+    if not archive_path:
+        return(False)
+    name = archive_path.split('/')[1]
+    try:
+        put(archive_path, '/tmp/')
+        run("mkdir -p /data/web_static/releases/{}".format(name))
+        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}"
+            .format(name, name))
+        run("rm /tmp/{}".format(name))
+        run("mv /data/web_static/releases/{}/web_static/*\
+        /data/web_static/releases/{}".format(name, name))
+        run("rm -rf /data/web_static/releases/{}/web_static".format(name))
+        run("rm -rf /data/web_static/current")
+        run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
+            .format(name))
+        print("New version deployed")
+        return(True)
+    except BaseException:
+        return(False)
