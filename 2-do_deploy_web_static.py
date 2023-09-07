@@ -8,6 +8,8 @@ from os import path
 
 env.user = "ubuntu"
 env.hosts = ['52.87.154.89', '54.174.246.6']
+
+
 def do_deploy(archive_path):
     """ deploy static files to the web server """
     fil = os.path.basename(archive_path)
