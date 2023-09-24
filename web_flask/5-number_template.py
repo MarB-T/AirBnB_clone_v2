@@ -3,7 +3,7 @@
 script to start a Flask web App
 """
 
-from flask import Flask, abort
+from flask import Flask, abort, render_template
 
 
 app = Flask(__name__)
@@ -47,7 +47,7 @@ def num_route(n):
 
 
 @app.route("/number_template/<n>", strict_slashes=False)
-def num_route(n):
+def num_temp(n):
     """ Render 5-number.hmtl only if n is integer """
     try:
         n = int(n)
