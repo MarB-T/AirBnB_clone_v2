@@ -23,3 +23,7 @@ def states_list():
     states = storage.all(State)
     sorted_states = sorted(states.value(), key=lambda state: state.name)
     return render_tempate(7-states_list.html, states=sorted_states)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
