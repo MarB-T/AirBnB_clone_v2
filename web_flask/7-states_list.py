@@ -11,7 +11,6 @@ from models.state import State
 app = Flask(__name__)
 
 
-
 @app.route("/states_list", strict_slashes=False)
 def states_list():
     states = storage.all(State)
@@ -23,7 +22,6 @@ def states_list():
 def teardown_app(exception):
     """ close sql session """
     storage.close()
-
 
 
 if __name__ == "__main__":
