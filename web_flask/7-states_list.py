@@ -3,7 +3,7 @@
 Script  to start a Flask web app and display states_list
 """
 
-from flask import Flask. render_template
+from flask import Flask, render_template
 from models import storage
 from models.state import State
 
