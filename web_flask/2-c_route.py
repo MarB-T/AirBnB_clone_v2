@@ -25,7 +25,7 @@ def hbnb():
 def c_text(text):
     """ Display C followed by the value of the text variable """
     text = text.replace("_", " ")
-    return f"<p>C {text}</p>"
+    return "C {}".format(text)
 
 
 if __name__ == "__main__":
