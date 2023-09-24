@@ -38,10 +38,12 @@ def py_text(text="is cool"):
 
 @app.route("/number/<n>", strict_slashes=False)
 def num_route(n):
-    """ Tell if n is an integer """
-    n = int(n)
-    if isinstance(n, int):
+    """ Display only if n is integer """
+    try:
+        n = int(n)  # Try to convert 'n' to an integer
         return "{} is a number".format(n)
+    except ValueError:
+        return "{} is not a valid number".format(n)
 
 
 if __name__ == "__main__":
