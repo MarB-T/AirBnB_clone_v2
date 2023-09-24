@@ -3,7 +3,7 @@
 script to start a Flask web App
 """
 
-from flask import Flask
+from flask import Flask, abort
 
 
 app = Flask(__name__)
@@ -40,10 +40,10 @@ def py_text(text="is cool"):
 def num_route(n):
     """ Display only if n is integer """
     try:
-        n = int(n)  # Try to convert 'n' to an integer
+        n = int(n)
         return "{} is a number".format(n)
     except ValueError:
-        return "{} is not a valid number".format(n)
+        abort(404)
 
 
 if __name__ == "__main__":
