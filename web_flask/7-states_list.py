@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-""" 
-Script  to start a Flask web app and display states_list 
+"""
+Script  to start a Flask web app and display states_list
 """
 
 from flask import Flask. render_template
