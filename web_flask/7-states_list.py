@@ -14,8 +14,7 @@ app = Flask(__name__)
 @app.route("/states_list", strict_slashes=False)
 def states_list():
     states = storage.all(State)
-    sorted_states = sorted(states.value(), key=lambda state: state.name)
-    return render_tempate(7-states_list.html, states=sorted_states)
+    return render_tempate(7-states_list.html, states=states)
 
 
 @app.teardown_appcontext
