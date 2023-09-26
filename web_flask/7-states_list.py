@@ -15,13 +15,13 @@ app = Flask(__name__)
 def states_list():
     """render states list in storage"""
     states = storage.all(State)
-    return render_tempate(7-states_list.html, states=states)
+    return render_tempate("7-states_list.html", states=states.value()|sort(attribute="name"))
 
 
 @app.teardown_appcontext
 def teardown_app(exception):
     """ close sql session """
-    storage.close()
+    storage.close(exception)
 
 
 if __name__ == "__main__":
