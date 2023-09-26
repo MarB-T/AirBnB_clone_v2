@@ -3,7 +3,7 @@
 Lits/render cities by states
 """
 
-from flask import FLask, render_template
+from flask import Flask, render_template
 from models.state import State
 from models import storage
 
