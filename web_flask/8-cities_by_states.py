@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-""" Lits/render cities by states """
+"""
+Lits/render cities by states
+"""
+
 from flask import FLask, render_template
 from models.state import States
 from models import storage
